@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class LinearProbingHashTable<K,V> implements HashTable<K,V> {
+public class LinkedListHashTable<K,V> implements HashTable<K,V> {
   private static final int INIT_CAPACITY = 64;
   private static final int BUCKET_CAPACITY = 8;
   
@@ -16,11 +16,11 @@ public class LinearProbingHashTable<K,V> implements HashTable<K,V> {
   private int[] load;
   private Entry<K,V>[][] entries;
   
-  public LinearProbingHashTable() {
+  public LinkedListHashTable() {
     this(INIT_CAPACITY, BUCKET_CAPACITY);
   }
   
-  public LinearProbingHashTable(int initialCapacity, int bucketCapacity) {
+  public LinkedListHashTable(int initialCapacity, int bucketCapacity) {
     if (initialCapacity < 0) {
       throw new IllegalArgumentException("Invalid initial capacity: " + initialCapacity);
     }

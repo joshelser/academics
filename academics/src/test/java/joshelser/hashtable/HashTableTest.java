@@ -12,7 +12,7 @@ public class HashTableTest {
   
   @Test
   public void runHashTableTest() {
-    HashTable<String,String> hash = new LinearProbingHashTable<String,String>(4, 4);
+    HashTable<String,String> hash = new LinkedListHashTable<String,String>(4, 4);
     
     Assert.assertTrue("hash.put('key', 'value')", hash.put("key", "value"));
     
@@ -35,7 +35,7 @@ public class HashTableTest {
   
   @Test
   public void resizeBucket() {
-    HashTable<String,String> hash = new LinearProbingHashTable<String,String>(1, 8);
+    HashTable<String,String> hash = new LinkedListHashTable<String,String>(1, 8);
     
     hash.put("a", "a");
     hash.put("b", "a");
@@ -72,7 +72,7 @@ public class HashTableTest {
   }
   
   public void testHash(int capacity, int bucket) {
-    HashTable<Integer,UUID> hash = new LinearProbingHashTable<Integer,UUID>(capacity, bucket);
+    HashTable<Integer,UUID> hash = new LinkedListHashTable<Integer,UUID>(capacity, bucket);
     
     Long now = System.currentTimeMillis();
     loadHash(hash);
