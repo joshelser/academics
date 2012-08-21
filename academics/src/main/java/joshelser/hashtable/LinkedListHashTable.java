@@ -1,3 +1,4 @@
+
 package joshelser.hashtable;
 
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class LinkedListHashTable<K,V> implements HashTable<K,V> {
     
     return true;
   }
-  
+
   public V get(K key) {
     int index = key.hashCode() % this.capacity;
     
