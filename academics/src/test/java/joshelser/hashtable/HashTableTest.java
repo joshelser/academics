@@ -56,11 +56,19 @@ public class HashTableTest {
     testHash(128, 8);
     testHash(256, 8);
     testHash(512, 8);
+    testHash(1024, 8);
 
-    testHash(64, 16);
-    testHash(128, 16);
-    testHash(256, 16);
-    testHash(512, 16);
+    testHash(64, 32);
+    testHash(128, 32);
+    testHash(256, 32);
+    testHash(512, 32);
+    testHash(1024, 32);
+
+    testHash(64, 64);
+    testHash(128, 64);
+    testHash(256, 64);
+    testHash(512, 64);
+    testHash(1024, 64);
   }
   
   public void testHash(int capacity, int bucket) {
@@ -74,7 +82,7 @@ public class HashTableTest {
     //System.out.println("Entries: " + hash.size());
     Assert.assertEquals(0, hash.size());
     
-    System.out.println("Capacity: " + capacity + ", duration: " + (then - now) / 1000.0);
+    System.out.println("Capacity: " + capacity + ", bucketCapacity: " + bucket + ", duration: " + (then - now) / 1000.0);
   }
   
   public void loadHash(HashTable<Integer,UUID> hash) {
