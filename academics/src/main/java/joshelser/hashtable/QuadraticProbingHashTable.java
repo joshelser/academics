@@ -1,12 +1,12 @@
 package joshelser.hashtable;
 
 
-public class LinearProbingHashTable<K,V> extends ProbingHashTable<K,V> {
-  public LinearProbingHashTable() {
+public class QuadraticProbingHashTable<K,V> extends ProbingHashTable<K,V> {
+  public QuadraticProbingHashTable() {
     super();
   }
   
-  public LinearProbingHashTable(int capacity) {
+  public QuadraticProbingHashTable(int capacity) {
     super(capacity);
   }
   
@@ -15,7 +15,7 @@ public class LinearProbingHashTable<K,V> extends ProbingHashTable<K,V> {
     int step = 1;
     
     while (null != this.getEntries()[index] && !this.getEntries()[index].getKey().equals(key)) {
-      index = (index + step) % this.getEntries().length;
+      index = (index + (step * step)) % this.getEntries().length;
       step++;
     }
     
@@ -27,12 +27,10 @@ public class LinearProbingHashTable<K,V> extends ProbingHashTable<K,V> {
     int step = 1;
     
     while (null != this.getEntries()[index] && !this.getEntries()[index].getValue().equals(value)) {
-      index = (index + step) % this.getEntries().length;
+      index = (index + (step * step)) % this.getEntries().length;
       step++;
     }
     
     return index;
   }
-
 }
-

@@ -57,6 +57,29 @@ public class HashTableTest {
   }
   
   @Test
+  public void QuadraticHashTableTest() {
+    HashTable<String,String> hash = new QuadraticProbingHashTable<String,String>(4);
+    
+    Assert.assertTrue("hash.put('key', 'value')", hash.put("key", "value"));
+    
+    Assert.assertFalse("hash.put('key', 'value')", hash.put("key", "value"));
+    
+    Assert.assertTrue("hash.put('key1', 'value1')", hash.put("key1", "value1"));
+    Assert.assertTrue("hash.put('key2', 'value2')", hash.put("key2", "value2"));
+    Assert.assertTrue("hash.put('key3', 'value3')", hash.put("key3", "value3"));
+    Assert.assertTrue("hash.put('key4', 'value4')", hash.put("key4", "value4"));
+    Assert.assertTrue("hash.put('key5', 'value5')", hash.put("key5", "value5"));
+    Assert.assertTrue("hash.put('key6', 'value6')", hash.put("key6", "value6"));
+    Assert.assertTrue("hash.put('key7', 'value7')", hash.put("key7", "value7"));
+    Assert.assertTrue("hash.put('key8', 'value8')", hash.put("key8", "value8"));
+    Assert.assertTrue("hash.put('key9', 'value9')", hash.put("key9", "value9"));
+    
+    hash.remove("key");    
+    hash.remove("key4");    
+    hash.remove("key8");
+  }
+  
+  @Test
   public void resizeBucket() {
     HashTable<String,String> hash = new LinkedListHashTable<String,String>(1, 8);
     
@@ -127,6 +150,20 @@ public class HashTableTest {
     testHash(new LinearProbingHashTable<Integer,UUID>(512));
     System.out.println("LinearProbingHashTable - Capacity: " + 1024);
     testHash(new LinearProbingHashTable<Integer,UUID>(1024));
+  }
+  
+  @Test
+  public void testQuadraticVariedSizes() {
+    System.out.println("QuadraticProbingHashTable - Capacity: " + 64);
+    testHash(new QuadraticProbingHashTable<Integer,UUID>(64));
+    System.out.println("QuadraticProbingHashTable - Capacity: " + 128);
+    testHash(new QuadraticProbingHashTable<Integer,UUID>(128));
+    System.out.println("QuadraticProbingHashTable - Capacity: " + 256);
+    testHash(new QuadraticProbingHashTable<Integer,UUID>(256));
+    System.out.println("QuadraticProbingHashTable - Capacity: " + 512);
+    testHash(new QuadraticProbingHashTable<Integer,UUID>(512));
+    System.out.println("QuadraticProbingHashTable - Capacity: " + 1024);
+    testHash(new QuadraticProbingHashTable<Integer,UUID>(1024));
   }
   
   public void testHash(HashTable<Integer,UUID> hash) {
