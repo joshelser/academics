@@ -1,14 +1,15 @@
 package joshelser.algorithms;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Sorting {
+  @SuppressWarnings("unchecked")
   public static <T extends Comparable<T>> List<T> selectionSort(List<T> list) {
     if (list.size() < 2) {
       return list;
     }
-    @SuppressWarnings("unchecked")
     T[] orig = (T[]) list.toArray();
     T[] data = (T[]) new Comparable[list.size()];
     
@@ -46,12 +47,10 @@ public class Sorting {
       return list;
     }
     
-    T[] copy = (T[]) list.toArray();
-    T[] data = (T[]) new Comparable[list.size()];
+    T typeVar = list.get(0);
+    T[] copy = (T[]) list.toArray((T[]) Array.newInstance(typeVar.getClass(),0));
     
-    System.arraycopy(copy, 0, data, 0, list.size());
-    
-    T[] sorted = mergeSort(data);
+    T[] sorted = mergeSort(copy);
     
     List<T> ret = new ArrayList<T>(sorted.length);
     for (int i = 0; i < sorted.length; i++) {
@@ -111,12 +110,10 @@ public class Sorting {
     return ret;
   }
   
-  //TODO Change this to be constant in memory consumption
   public static <T extends Comparable<T>> List<T> quickSort(List<T> list) {
     return quickSort(list, (list.size()/ 2));
   }
 
-  @SuppressWarnings("unchecked")
   private static <T extends Comparable<T>> List<T> quickSort(List<T> data, int pivot) {
     if (data.size() < 2) {
       return data;
@@ -155,15 +152,67 @@ public class Sorting {
     
     return ret;
   }
+  
+  @SuppressWarnings("unchecked")
+  public static <T extends Comparable<T>> List<T> quickSortInPlace(List<T> list) {
+    if (list.isEmpty()) {
+      // Have to perform the shortcut because of java's silliness with types.
+      // An empty ArrayList<String> will cause a ClassCastException trying to
+      // convert Object to Comparable -_-
+      return list;
+    }
+    
+    T typeVar = list.get(0);
+    T[] data = (T[]) list.toArray((T[]) Array.newInstance(typeVar.getClass(),0));
+    
+    quickSortInPlace(data, 0, data.length - 1);
+    
+    ArrayList<T> ret = new ArrayList<T>(data.length);
+    for (int i = 0; i < data.length; i++) {
+      ret.add(data[i]);
+    }
+    
+    return ret;
+  }
+  
+  private static <T extends Comparable<T>> void quickSortInPlace(T[] data, int begin, int end) {
+    if (end <= begin) {
+      return;
+    }
+    
+    int pivot = (end + begin) / 2;
+    
+    int newPivot = partition(data, begin, end, pivot);
+    
+    quickSortInPlace(data, begin, newPivot - 1);
+    
+    quickSortInPlace(data, newPivot + 1, end);
+
+    return;
+  }
+  
+  private static <T extends Comparable<T>> int partition(T[] data, int begin, int end, int pivot) {
+    // Move the pivot value to the end
+    T pivotVal = data[pivot];
+    data[pivot] = data[end];
+    data[end] = pivotVal;
+    
+    int newPivot = begin;
+    for (int i = begin; i < end; i++) {
+      if (data[i].compareTo(pivotVal) < 0) {
+        // swap
+        T tmp = data[newPivot];
+        data[newPivot] = data[i];
+        data[i] = tmp;
+        
+        newPivot++;
+      }
+    }
+    
+    // Swap back the pivot
+    data[end] = data[newPivot];
+    data[newPivot] = pivotVal;
+    
+    return newPivot;
+  }
 }
-
-
-
-
-
-
-
-
-
-
-
