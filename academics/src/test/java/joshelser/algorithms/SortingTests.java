@@ -24,7 +24,7 @@ public class SortingTests {
     
     bigList = new ArrayList<Integer>((int) Math.pow(2, 14));
     Random r = new Random(8359183759l);
-    for (int i = 0; i < Math.pow(2, 23); i++) {
+    for (int i = 0; i < Math.pow(2, 25); i++) {
       bigList.add(r.nextInt((int) Math.pow(2, 20)));
     }
   }

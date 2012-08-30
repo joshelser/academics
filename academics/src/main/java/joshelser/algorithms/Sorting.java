@@ -5,105 +5,71 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Sorting {
-  @SuppressWarnings("unchecked")
   public static <T extends Comparable<T>> List<T> selectionSort(List<T> list) {
     if (list.size() < 2) {
       return list;
     }
-    T[] orig = (T[]) list.toArray();
-    T[] data = (T[]) new Comparable[list.size()];
     
-    System.arraycopy(orig, 0, data, 0, list.size());
+    List<T> data = new ArrayList<T>(list);
     
-    for (int i = 0; i < data.length; i++) {
+    for (int i = 0; i < data.size(); i++) {
       T min = null;
       int minIndex = -1;
-      for (int j = i; j < data.length; j++) {
-        if (min == null || data[j].compareTo(min) < 0) {
-          min = data[j];
+      for (int j = i; j < data.size(); j++) {
+        if (min == null || data.get(j).compareTo(min) < 0) {
+          min = data.get(j);
           minIndex = j;
         }
       }
       
       if (minIndex > i) {
-        T tmp = data[i];
-        data[i] = data[minIndex];
-        data[minIndex] = tmp;
+        T tmp = data.get(i);
+        data.set(i, data.get(minIndex));
+        data.set(minIndex, tmp);
       }
       
     }
     
-    ArrayList<T> ret = new ArrayList<T>(data.length);
-    for (int i = 0; i < data.length; i++) {
-      ret.add(data[i]);
-    }
-    
-    return ret;
+    return data;
   }
   
-  @SuppressWarnings("unchecked")
-  public static <T extends Comparable<T>> List<T> mergeSort(List<T> list) {
-    if (list.size() < 2) {
-      return list;
-    }
-    
-    T typeVar = list.get(0);
-    T[] copy = (T[]) list.toArray((T[]) Array.newInstance(typeVar.getClass(),0));
-    
-    T[] sorted = mergeSort(copy);
-    
-    List<T> ret = new ArrayList<T>(sorted.length);
-    for (int i = 0; i < sorted.length; i++) {
-      ret.add(sorted[i]);
-    }
-    
-    return ret;
-  }
-  
-  @SuppressWarnings("unchecked")
-  private static <T extends Comparable<T>> T[] mergeSort(T[] data) {
+  public static <T extends Comparable<T>> List<T> mergeSort(List<T> data) {
     // Already sorted
-    if (data.length < 2) {
+    if (data.size() < 2) {
       return data;
     }
     
-    T[] left = (T[]) new Comparable[data.length / 2];
-    T[] right = (T[]) new Comparable[data.length - left.length];
+    List<T> left = new ArrayList<T>(data.subList(0, (data.size() / 2)));
+    List<T> right = new ArrayList<T>(data.subList((data.size() / 2), data.size()));
     
-    System.arraycopy(data, 0, left, 0, left.length);
-    System.arraycopy(data, left.length, right, 0, right.length);
-    
-    T[] sortedLeft = mergeSort(left);
-    T[] sortedRight = mergeSort(right);
+    List<T> sortedLeft = mergeSort(left);
+    List<T> sortedRight = mergeSort(right);
     
     return merge(sortedLeft, sortedRight);
   }
-  
-  @SuppressWarnings("unchecked")
-  private static <T extends Comparable<T>> T[] merge(T[] left, T[] right) {
-    T[] ret = (T[]) new Comparable[left.length + right.length];
+
+  private static <T extends Comparable<T>> List<T> merge(List<T> left, List<T> right) {
+    List<T> ret = new ArrayList<T>(left.size() + right.size());
     
-    int retIndex = 0, lIndex = 0, rIndex = 0;
-    for (; lIndex < left.length && rIndex < right.length; retIndex++) {
-      int cmp = left[lIndex].compareTo(right[rIndex]);
+    int lIndex = 0, rIndex = 0;
+    for (; lIndex < left.size() && rIndex < right.size();) {
+      int cmp = left.get(lIndex).compareTo(right.get(rIndex));
       if (cmp < 0) { 
-        ret[retIndex] = left[lIndex];
+        ret.add(left.get(lIndex));
         lIndex++;
       } else {
-        ret[retIndex] = right[rIndex];
+        ret.add(right.get(rIndex));
         rIndex++;
       }
     }
     
-    while (lIndex < left.length) {
-      ret[retIndex] = left[lIndex];
-      retIndex++;
+    while (lIndex < left.size()) {
+      ret.add(left.get(lIndex));
       lIndex++;
     }
     
-    while (rIndex < right.length) {
-      ret[retIndex] = right[rIndex];
-      retIndex++;
+    while (rIndex < right.size()) {
+      ret.add(right.get(rIndex));
       rIndex++;
     }
     
@@ -152,30 +118,18 @@ public class Sorting {
     
     return ret;
   }
-  
-  @SuppressWarnings("unchecked")
+
   public static <T extends Comparable<T>> List<T> quickSortInPlace(List<T> list) {
-    if (list.isEmpty()) {
-      // Have to perform the shortcut because of java's silliness with types.
-      // An empty ArrayList<String> will cause a ClassCastException trying to
-      // convert Object to Comparable -_-
+    if (list.size() < 2) {
       return list;
     }
     
-    T typeVar = list.get(0);
-    T[] data = (T[]) list.toArray((T[]) Array.newInstance(typeVar.getClass(),0));
+    quickSortInPlace(list, 0, list.size() - 1);
     
-    quickSortInPlace(data, 0, data.length - 1);
-    
-    ArrayList<T> ret = new ArrayList<T>(data.length);
-    for (int i = 0; i < data.length; i++) {
-      ret.add(data[i]);
-    }
-    
-    return ret;
+    return list;
   }
   
-  private static <T extends Comparable<T>> void quickSortInPlace(T[] data, int begin, int end) {
+  private static <T extends Comparable<T>> void quickSortInPlace(List<T> data, int begin, int end) {
     if (end <= begin) {
       return;
     }
@@ -191,27 +145,27 @@ public class Sorting {
     return;
   }
   
-  private static <T extends Comparable<T>> int partition(T[] data, int begin, int end, int pivot) {
+  private static <T extends Comparable<T>> int partition(List<T> data, int begin, int end, int pivot) {
     // Move the pivot value to the end
-    T pivotVal = data[pivot];
-    data[pivot] = data[end];
-    data[end] = pivotVal;
+    T pivotVal = data.get(pivot);
+    data.set(pivot, data.get(end));
+    data.set(end, pivotVal);
     
     int newPivot = begin;
     for (int i = begin; i < end; i++) {
-      if (data[i].compareTo(pivotVal) < 0) {
+      if (data.get(i).compareTo(pivotVal) < 0) {
         // swap
-        T tmp = data[newPivot];
-        data[newPivot] = data[i];
-        data[i] = tmp;
+        T tmp = data.get(newPivot);
+        data.set(newPivot, data.get(i));
+        data.set(i, tmp);
         
         newPivot++;
       }
     }
     
     // Swap back the pivot
-    data[end] = data[newPivot];
-    data[newPivot] = pivotVal;
+    data.set(end, data.get(newPivot));
+    data.set(newPivot, pivotVal);
     
     return newPivot;
   }
