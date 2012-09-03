@@ -1,10 +1,12 @@
 package joshelser.algorithms;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Sorting {
+  private static final Random rand = new Random(89357891735981l);
+  
   public static <T extends Comparable<T>> List<T> selectionSort(List<T> list) {
     if (list.size() < 2) {
       return list;
@@ -127,6 +129,33 @@ public class Sorting {
     quickSortInPlace(list, 0, list.size() - 1);
     
     return list;
+  }
+
+  public static <T extends Comparable<T>> List<T> quickSortInPlaceRandPartition(List<T> list) {
+    if (list.size() < 2) {
+      return list;
+    }
+    
+    quickSortInPlace(list, 0, list.size() - 1);
+    
+    return list;
+  }
+  
+  private static <T extends Comparable<T>> void quickSortInPlaceRandPartition(List<T> data, int begin, int end) {
+    if (end <= begin) {
+      return;
+    }
+    
+    // Account for non-inclusivity of the end range for Random#nextInt
+    int pivot = rand.nextInt((end + 1) - begin) + begin;
+    
+    int newPivot = partition(data, begin, end, pivot);
+    
+    quickSortInPlaceRandPartition(data, begin, newPivot - 1);
+    
+    quickSortInPlaceRandPartition(data, newPivot + 1, end);
+
+    return;
   }
   
   private static <T extends Comparable<T>> void quickSortInPlace(List<T> data, int begin, int end) {

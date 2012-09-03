@@ -22,10 +22,14 @@ public class SortingTests {
     singleList = Arrays.asList("a");
     doubleList = Arrays.asList("b", "a");
     
+    makeList();
+  }
+  
+  public void makeList() {
     bigList = new ArrayList<Integer>((int) Math.pow(2, 14));
     Random r = new Random(8359183759l);
-    for (int i = 0; i < Math.pow(2, 25); i++) {
-      bigList.add(r.nextInt((int) Math.pow(2, 20)));
+    for (int i = 0; i < Math.pow(2, 22); i++) {
+      bigList.add(r.nextInt((int) Math.pow(2, 22)));
     }
   }
   
@@ -63,12 +67,59 @@ public class SortingTests {
   
   @Test
   public void benchmark() {
+    List<Integer> testList = new ArrayList<Integer>(bigList);
+    
+    System.gc();
     Long now = System.currentTimeMillis();
-    checkList(Sorting.mergeSort(bigList));
+    checkList(Sorting.mergeSort(testList));
     System.out.println("Mergesort: " + (System.currentTimeMillis() - now) / (double) 1000);
-    //checkList(Sorting.quickSort(bigList));
-    checkList(Sorting.quickSortInPlace(bigList));
+    
+    /*testList = new ArrayList<Integer>(bigList);
+    now = System.currentTimeMillis();
+    checkList(Sorting.quickSort(testList));
+    System.out.println("Quicksort: " + (System.currentTimeMillis() - now) / (double) 1000);
+    */
+    
+    testList = new ArrayList<Integer>(bigList);
+
+    System.gc();
+    now = System.currentTimeMillis();
+    checkList(Sorting.quickSortInPlace(testList));
     System.out.println("Quicksort inplace: " + (System.currentTimeMillis() - now) / (double) 1000);
+  }
+  
+  @Test
+  public void benchmarkQuick() {
+    List<Integer> testList = new ArrayList<Integer>(bigList);
+    int totalInPlace = 0, totalRandPartition = 0;
+    int numTests = 10;
+    
+    for (int i = 0; i < numTests; i++) {
+      System.gc();
+      Long now = System.currentTimeMillis();
+      checkList(Sorting.quickSortInPlace(testList));
+      Long then = System.currentTimeMillis();
+      totalInPlace += (then - now);
+      System.out.println("Quicksort inplace: " + (then - now) / (double) 1000);
+      
+      
+      testList = new ArrayList<Integer>(bigList);
+      
+      System.gc();
+      now = System.currentTimeMillis();
+      checkList(Sorting.quickSortInPlaceRandPartition(testList));
+      then = System.currentTimeMillis();
+      totalRandPartition += (then - now);
+      System.out.println("Quicksort inplace rand partition: " + (then - now) / (double) 1000);
+      
+      makeList();
+      testList = new ArrayList<Integer>(bigList);
+      System.out.println();
+    }
+
+    System.out.println("\nQuicksort inplace total: " + (totalInPlace) / (double) 1000 / (double) numTests);
+    System.out.println("Quicksort inplace rand partition total: " + (totalRandPartition) / (double) 1000 / (double) numTests);
+    
   }
   
   private <T extends Comparable<T>> void checkList(List<T> sorted) {
